@@ -20,16 +20,27 @@ let createPlayer = function(name, number, symbol) {
 
 let render = (function(){
     let gridBoxes = document.querySelectorAll('.gameBoard div');
-    for(let i=0;i<=8; i++) {
-        gridBoxes[i].textContent = gameModule.board[i];
+    let renderArray = () => {
+        for(let i=0;i<=8; i++) {
+            gridBoxes[i].textContent = gameModule.board[i];
+        }
     }
-    console.log('heloooe')
-
+    return {renderArray}
 })();
 
 
 
 
+let button1 = document.querySelector("#butt")
+button1.addEventListener('click', () => {
+    gameModule.board[0] = "lmao";
+    console.log(gameModule.board);
+    render.renderArray();
+});
+
+
+
+render.renderArray();
 
 
 let dude1 = createPlayer('John', 1, "x");
