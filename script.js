@@ -1,7 +1,7 @@
 /*array inside game module*/
 let gameModule = (function(){
-    let board = [];
-    return{}
+    let board = [0, 1, 0, 1, 0, 1, 0, 1, 0];
+    return{board}
 })();
 
 
@@ -20,7 +20,10 @@ let createPlayer = function(name, number, symbol) {
 
 let render = (function(){
     let gridBoxes = document.querySelectorAll('.gameBoard div');
-    gridBoxes[0].textContent = gameModule.board;
+    for(let i=0;i<=8; i++) {
+        gridBoxes[i].textContent = gameModule.board[i];
+    }
+    console.log('heloooe')
 
 })();
 
