@@ -20,6 +20,9 @@ let createPlayer = function(name, number, symbol) {
 
 let render = (function(){
     let gridBoxes = document.querySelectorAll('.gameBoard div');
+    gridBoxes.forEach(node => {
+        node.addEventListener('click', ()=>{console.log(node.textContent)})
+    })
     let renderArray = () => {
         for(let i=0;i<=8; i++) {
             gridBoxes[i].textContent = gameModule.board[i];
