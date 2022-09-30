@@ -32,11 +32,11 @@ let createPlayer = function(name, number, symbol) {
 
 
 let button1 = document.querySelector("#butt")
-button1.addEventListener('click', () => {
+button1.onclick = () => {
     gameModule.board[0] = "lmao";
     console.log(gameModule.board);
     displayControllerMod.renderArray();
-});
+};
 
 
 
