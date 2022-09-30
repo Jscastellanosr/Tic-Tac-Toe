@@ -1,6 +1,6 @@
 /*array inside game module*/
 let gameModule = (function(){
-    let board = [0, 1, 0, 1, 0, 1, 0, 1, 0];
+    let board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     return{board}
 })();
 
@@ -9,7 +9,14 @@ let gameModule = (function(){
 let displayControllerMod = (function(){
     let gridBoxes = document.querySelectorAll('.gameBoard div');
     gridBoxes.forEach(node => {
-        node.addEventListener('click', ()=>{console.log(node.textContent)})
+        node.checked = false;
+        node.addEventListener('click', ()=>{
+            if(node.checked == false) {
+                node.textContent = "x";
+                node.checked = true;
+                console.log(node);
+            }
+            })
     })
     let renderArray = () => {
         for(let i=0;i<=8; i++) {
