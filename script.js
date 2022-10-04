@@ -1,6 +1,6 @@
 /*array inside game module*/
 let gameModule = (function(){
-    let board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let board = [ , , , , , , , , ];
     return{board}
 })();
 
@@ -14,9 +14,9 @@ let displayControllerMod = (function(){
             if(node.checked == false) {
                 node.textContent = "x";
                 node.checked = true;
-                console.log(node);
+                console.log(node.checked);
             }
-            })
+            });
     })
     let renderArray = () => {
         for(let i=0;i<=8; i++) {

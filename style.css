@@ -1,0 +1,21 @@
+.gameBoard {
+    display: flex;
+    flex-wrap: wrap;
+    width: 500px;
+    height: 500px;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.gameBoard div {
+    background-color: aqua;
+    box-sizing: border-box;
+    flex-basis: 30%;
+    height: 30%;
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+}
