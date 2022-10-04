@@ -9,30 +9,27 @@ let gameModule = (function(){
 let displayControllerMod = (function(){
     let gridBoxes = document.querySelectorAll('.gameBoard div');
     gridIndex = 0;
-    let move = 1;
+    let player = 1;
     gridBoxes.forEach(node => {
         node.dataset.checked = false;
         node.index = gridIndex;
         gridIndex++;
         
         node.addEventListener('click', ()=>{
-            console.log(move)
             
-            let symbol = players[move - 1].symbol;
-
-            console.log(symbol);
+            let symbol = players[player - 1].symbol;
             
 
             if(node.getAttribute('data-checked') == 'false') {
                 node.textContent = symbol;
-                gameModule.board[node.index] = node.textContent;
+                gameModule.board[node.index] = symbol;
                 node.dataset.checked = true;
 
 
                 for (i=0;i<8;i++){
                     if (gameModule.board[i] != null && 
                         ((gameModule.board[i] == gameModule.board[i+3] && gameModule.board[i]== gameModule.board[i+6])||
-                        ((i == 0 || 3 || 6) && gameModule.board[i] == gameModule.board[i+1] && gameModule.board[i]== gameModule.board[i+2]))){
+                        ((i == 0 || i == 3 || i == 6) && gameModule.board[i] == gameModule.board[i+1] && gameModule.board[i]== gameModule.board[i+2]))){
                         gameOver();
                     }
                 }
@@ -42,14 +39,15 @@ let displayControllerMod = (function(){
                 }
 
 
-                move == 1? move = 2: move = 1;
+                player == 1? player = 2: player = 1;
 
             }
             });
         
     })
     function gameOver () {
-        alert('Game Over')
+        alert(`Game Over. Player ${player} wins!`)
+        console.log('Game Over')
     }
     let renderArray = () => {
         for(let i=0;i<=8; i++) {
