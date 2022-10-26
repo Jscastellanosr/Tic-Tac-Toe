@@ -1,7 +1,13 @@
 /*array inside game module*/
 let gameModule = (function(){
     let board = [,,,,,,,,];
-    return{board}
+    const getBoard = () => {
+        return board;
+    }
+    const modBoard = (index, value) => {
+        board[index] = value;
+    }
+    return{getBoard, modBoard}
 })();
 
 
@@ -22,19 +28,24 @@ let displayControllerMod = (function(){
 
             if(node.getAttribute('data-checked') == 'false') {
                 node.textContent = symbol;
-                gameModule.board[node.index] = symbol;
+                gameModule.modBoard(node.index, symbol);
                 node.dataset.checked = true;
+
+                const tempBoard = gameModule.getBoard()
+
+                console.log(gameModule.getBoard()[1])
 
 
                 for (i=0;i<8;i++){
-                    if (gameModule.board[i] != null && 
-                        ((gameModule.board[i] == gameModule.board[i+3] && gameModule.board[i]== gameModule.board[i+6])||
-                        ((i == 0 || i == 3 || i == 6) && gameModule.board[i] == gameModule.board[i+1] && gameModule.board[i]== gameModule.board[i+2]))){
+                    if (gameModule.getBoard()[i] != null && 
+                        ((gameModule.getBoard()[i] == gameModule.getBoard()[i+3] && gameModule.getBoard()[i]== gameModule.getBoard()[i+6])||
+                        ((i == 0 || i == 3 || i == 6) && gameModule.getBoard()[i] == gameModule.getBoard()[i+1] && gameModule.getBoard()[i]== gameModule.getBoard()[i+2]))){
+                        console.log('aasd')
                         gameOver();
                     }
                 }
-                if(((gameModule.board[0] != null && gameModule.board[0] == gameModule.board[4] && gameModule.board[0] == gameModule.board[8])||
-                    (gameModule.board[2] != null && gameModule.board[2] == gameModule.board[4] && gameModule.board[2] == gameModule.board[6]))){
+                if(((gameModule.getBoard()[0] != null && gameModule.getBoard()[0] == gameModule.getBoard()[4] && gameModule.getBoard()[0] == gameModule.getBoard()[8])||
+                    (gameModule.getBoard()[2] != null && gameModule.getBoard()[2] == gameModule.getBoard()[4] && gameModule.getBoard()[2] == gameModule.getBoard()[6]))){
                     gameOver();
                 }
 
@@ -51,7 +62,7 @@ let displayControllerMod = (function(){
     }
     let renderArray = () => {
         for(let i=0;i<=8; i++) {
-            gridBoxes[i].textContent = gameModule.board[i];
+            gridBoxes[i].textContent = gameModule.getBoard()[i];
         }
     }
     return {renderArray}
@@ -65,16 +76,6 @@ let createPlayer = function(name, number, symbol) {
     console.log(`player ${number} name is ${name}`)}
     return{getPName, name, number, symbol}
 }
-
-
-
-
-let button1 = document.querySelector("#butt")
-button1.onclick = () => {
-    gameModule.board[0] = "lmao";
-    console.log(gameModule.board);
-    displayControllerMod.renderArray();
-};
 
 
 
