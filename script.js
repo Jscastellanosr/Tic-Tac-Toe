@@ -13,6 +13,18 @@ let gameModule = (function(){
 
 /* Display Control Module*/
 let displayControllerMod = (function(){
+    const gameSelection = document.querySelector('.gameSelection')
+    const selectionScreen = document.querySelector('#selectionScreen');
+    const pvp = document.querySelector('.pvp');
+    
+
+    pvp.addEventListener('click', ()=>{
+        gameSelection.classList.toggle('inactive')
+        selectionScreen.classList.toggle('inactive')
+    })
+
+
+
     let gridBoxes = document.querySelectorAll('.gameBoard div');
     gridIndex = 0;
     let player = 1;
