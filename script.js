@@ -16,12 +16,57 @@ let displayControllerMod = (function(){
     const gameSelection = document.querySelector('.gameSelection')
     const selectionScreen = document.querySelector('#selectionScreen');
     const pvp = document.querySelector('.pvp');
-    
+    const iconsP1 = document.querySelectorAll('.player1 .pkmnTAB .icon')
+    const iconsP2 = document.querySelectorAll('.player2 .pkmnTAB .icon')
+    const selectP1 = document.querySelector('.player1 button')
+    const selectP2 = document.querySelector('.player2 button')
+    let pkmnP1;
+    let pkmnP2;
 
     pvp.addEventListener('click', ()=>{
         gameSelection.classList.toggle('inactive')
         selectionScreen.classList.toggle('inactive')
     })
+
+    iconsP1.forEach(icon =>{
+        icon.dataset.checked = false;
+
+        icon.addEventListener('click', ()=> {
+            iconsP1.forEach(icon => icon.dataset.checked = false);
+            icon.dataset.checked = true;
+
+        })
+    })
+    iconsP2.forEach(icon =>{
+        icon.dataset.checked = false;
+
+        icon.addEventListener('click', ()=> {
+            iconsP2.forEach(icon => icon.dataset.checked = false);
+            icon.dataset.checked = true;
+
+        })
+    })
+
+
+    selectP1.addEventListener('click', ()=> {
+
+        iconsP1.forEach(icon => {
+            if(icon.dataset.checked == 'true') {
+                pkmnP1 = icon.getElementsByTagName('img')[0];
+            }
+        })
+        console.log(pkmnP1)
+    })
+    selectP2.addEventListener('click', ()=> {
+        iconsP2.forEach(icon => {
+            if(icon.dataset.checked == 'true') {
+                pkmnP2 = icon.getElementsByTagName('img')[0];
+            }
+        })
+        console.log(pkmnP2)
+    })
+    
+
 
 
 

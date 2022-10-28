@@ -71,21 +71,35 @@ header{
 
 .pkmnTAB {
     display: flex;
+    flex-wrap: wrap;
     width: 75%;
+    height: 0;
+    padding-bottom: 75%;
     min-width: 270px;
     background-color: brown;
+    justify-content: center;
 
 }
 
-.pkmnTAB:after {
-    content: "";
-    display: block;
-    padding-bottom: 100%;
-}
+
 
 .icon{
-    height: 30%;
+    background-color: black;
     width: 30%;
+    height: 0;
+    padding-bottom: 30%;
+    box-sizing: border-box;
+    margin: 0.8%;
+}
+
+.icon img {
+    width: 50%;
+    padding: 25%;
+}
+
+.icon img:hover {
+    width: 80%;
+    padding: 10%;
 }
 
 
