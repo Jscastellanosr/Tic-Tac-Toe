@@ -11,8 +11,7 @@ let gameModule = (function(){
 })();
 
 
-/* Display Control Module*/
-let displayControllerMod = (function(){
+let boardflow = (function(){
     const gameSelection = document.querySelector('.gameSelection')
     const selectionScreen = document.querySelector('#selectionScreen');
     const pvp = document.querySelector('.pvp');
@@ -65,6 +64,13 @@ let displayControllerMod = (function(){
         })
         console.log(pkmnP2)
     })
+
+})()
+
+
+/* Display Control Module*/
+let displayControllerMod = (function(){
+
     
 
 
