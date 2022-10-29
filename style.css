@@ -41,7 +41,9 @@ header{
 }
 
 .player1,
-.player2 {
+.player2,
+.player1s,
+.player2s {
     min-width: 340px;
     min-height: 360px;
     height: 90%;
@@ -53,11 +55,7 @@ header{
     background-color: chartreuse;
 }
 
-.player1 h3,
-.player2 h3{
-    
 
-}
 
 .pkmnSelection{
     display: flex;
@@ -107,6 +105,15 @@ header{
     margin-bottom: 10px;
 }
 
+
+.P1Selected,
+.P2Selected {
+
+    height: 50%;
+}
+
+
+
 .gameBoard {
     display: flex;
     flex-wrap: wrap;
@@ -135,4 +142,8 @@ header{
 
 .inactive {
     display: none;
+}
+
+.emptyField {
+    border: solid red 2px;
 }
