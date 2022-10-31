@@ -7,7 +7,12 @@ let gameModule = (function(){
     const modBoard = (index, value) => {
         board[index] = value;
     }
-    return{getBoard, modBoard}
+    const clearBoard = () => {
+        board = [,,,,,,,,];
+    }
+
+
+    return{getBoard, modBoard, clearBoard}
 })();
 
 
@@ -23,6 +28,7 @@ let boardflow = (function(){
     const edit2 = document.querySelector('.player2s button');
     const start = document.querySelector('#start');
     const board = document.querySelector('.gameBoard')
+    const rounds = document.querySelector('#rounds')
     let P1Name = document.querySelector('#name1');
     let P2Name = document.querySelector('#name2');
     let P1Ready = false;
@@ -75,7 +81,7 @@ let boardflow = (function(){
             return;
         }
 
-        P1 = createPlayer(P1Name.value, 1, pkmnP1.src)
+        P1 = createPlayer(P1Name.value, 1, pkmnP1.alt ,pkmnP1.src)
         console.log(P1.getPName())
         console.log(P1.getPNumber())
         console.log(P1.getPURL())
@@ -96,7 +102,7 @@ let boardflow = (function(){
                 pkmnP2 = icon.getElementsByTagName('img')[0];
             }
         })
-        P2 = createPlayer(P2Name.value, 1, pkmnP2.src)
+        P2 = createPlayer(P2Name.value, 1, pkmnP2.alt, pkmnP2.src)
         console.log(P2.getPName())
         console.log(P2.getPNumber())
         console.log(P2.getPURL())
@@ -118,14 +124,15 @@ let boardflow = (function(){
 
     start.addEventListener('click', () => {
 
-        if (!P1Ready || !P2Ready) {
+
+        if (!P1Ready || !P2Ready || !rounds.value) {
             console.log('not ready');
             return;
         }
 
         selectionScreen.classList.toggle('inactive');
         board.classList.toggle('inactive');
-        displayControllerMod.getPlayers(P1, P2);
+        displayControllerMod.getGameData(P1, P2, rounds.value);
         console.log('READYYY')
         console.log(P1, P2)
     })
@@ -151,35 +158,47 @@ let boardflow = (function(){
 
 /* Display Control Module*/
 let displayControllerMod = (function(){
-
+    
     let player1;
     let player2;
-
-    let players = []
+    let rounds;
+    let round = 0;
 
 
     let gridBoxes = document.querySelectorAll('.gameBoard div');
     let gridIndex = 0;
-    let player = 1;
+    let playerTurn = 1;
     gridBoxes.forEach(node => {
         node.dataset.checked = false;
         node.index = gridIndex;
-        console.log(node.index)
         gridIndex++;
         
         node.addEventListener('click', ()=>{
-            
-            let symbol = players[player - 1].symbol;
+
+            console.log(rounds)
+            console.log(player1.getPName());
+
+
+
+            let symbol;
+            let poke;
+
+            playerTurn == 1? symbol = player1.getPURL(): symbol = player2.getPURL();
+            playerTurn == 1? poke = player1.getpkmn(): poke = player2.getpkmn();
             
 
             if(node.getAttribute('data-checked') == 'false') {
-                node.textContent = symbol;
-                gameModule.modBoard(node.index, symbol);
+                
+                
+                
+                const mark = document.createElement('img');
+                mark.src = symbol;
+                node.appendChild(mark);
+                gameModule.modBoard(node.index, poke);
+
                 node.dataset.checked = true;
 
                 const tempBoard = gameModule.getBoard()
-
-                console.log(gameModule.getBoard()[1])
 
 
                 for (i=0;i<8;i++){
@@ -187,53 +206,73 @@ let displayControllerMod = (function(){
                         ((gameModule.getBoard()[i] == gameModule.getBoard()[i+3] && gameModule.getBoard()[i]== gameModule.getBoard()[i+6])||
                         ((i == 0 || i == 3 || i == 6) && gameModule.getBoard()[i] == gameModule.getBoard()[i+1] && gameModule.getBoard()[i]== gameModule.getBoard()[i+2]))){
                         console.log('aasd')
-                        gameOver();
+                        roundOver();
+                        return;
                     }
                 }
                 if(((gameModule.getBoard()[0] != null && gameModule.getBoard()[0] == gameModule.getBoard()[4] && gameModule.getBoard()[0] == gameModule.getBoard()[8])||
                     (gameModule.getBoard()[2] != null && gameModule.getBoard()[2] == gameModule.getBoard()[4] && gameModule.getBoard()[2] == gameModule.getBoard()[6]))){
-                    gameOver();
+                    roundOver();
+                    return;
                 }
 
-
-                player == 1? player = 2: player = 1;
+                playerTurn == 1? playerTurn = 2: playerTurn = 1;
 
             }
             });
         
-    })
-    function gameOver () {
-        alert(`Game Over. Player ${player} wins!`)
-        console.log('Game Over')
-    }
-    let renderArray = () => {
-        for(let i=0;i<=8; i++) {
-            gridBoxes[i].textContent = gameModule.getBoard()[i];
+    });
+
+    
+    function roundOver () {
+
+        let winner;
+
+        playerTurn == 1? winner = player1.getPName(): winner = player2.getPName()
+
+        alert(`Game Over. ${winner} wins!`)
+        round = round + 1;
+        playerTurn = 1;
+        console.log(round)
+
+        if (round < rounds) {
+            console.log('aaaaaaaaaaa')
+            gameModule.clearBoard();
+            renderArray();
+        }else {
+            console.log('game is over')
+            round = 0;
         }
     }
 
+    let renderArray = () => {
+        for(let i=0;i<=8; i++) {
+            gridBoxes[i].innerHTML = ""
+            gridBoxes[i].dataset.checked = false;
+        }
+    }
 
-
-    const getPlayers = (P1, P2) => {
+    const getGameData = (P1, P2, Rounds) => {
         player1 = P1;
         player2 = P2;
-
+        rounds = Rounds;
     }
 
 
 
-    return {renderArray, getPlayers}
+    return {getGameData}
 })();
 
 
 
 /*player Factory Function*/
-let createPlayer = function(name, number, url) {
-    let getPName = () => {return name}
-    let getPNumber = () => {return number}
-    let getPURL = () => {return url}
+let createPlayer = function(name, number, pkmn, url) {
+    let getPName = () => {return name};
+    let getPNumber = () => {return number};
+    let getpkmn = () => {return pkmn};
+    let getPURL = () => {return url};
 
-    return{getPName, getPNumber, getPURL}
+    return{getPName, getPNumber, getPURL, getpkmn}
 }
 
 
