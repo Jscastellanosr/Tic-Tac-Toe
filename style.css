@@ -16,13 +16,15 @@ header{
     height: 15%;
 }
 .body{
+    box-sizing: border-box;
+    padding: 0.5% 2%; 
     background-color: coral;
     min-height: 430px;
     height: 75vh;
     min-width: 750px;
     width: 65%;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     overflow: visible;
 }
@@ -133,8 +135,8 @@ header{
 .gameBoard {
     display: flex;
     flex-wrap: wrap;
-    width: 70vh;
-    height: 70vh;
+    width: 60vh;
+    height: 60vh;
     justify-content: space-between;
     align-items: flex-start;
 }
@@ -162,4 +164,54 @@ header{
 
 .emptyField {
     border: solid red 2px;
+}
+
+.victoryPopUp.active {
+    height: 100%;
+    width: 100%;
+    background-color: rgb(110, 110, 110, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.victoryWindow{
+    position: absolute;
+    top: 50%;
+    left: -150%; /* we send the window where it cant be seen*/  
+    opacity: 1; /* we make the window invisible*/
+    background-color: rgb(215, 245, 212);
+    padding: 20px 30px;
+    width: 200px;
+    box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    transform: translate(300%, -50%) scale(1); /* this values are relative to the location it will have when the animation is over*/ 
+    transition: left 400ms ease-in-out 0ms,        /* from  active to non active*/
+
+                transform 0ms ease-in-out 400ms;
+}
+
+
+.victoryWindow.active {
+    left: 50%;
+    top: 50%; /* set the window at the middle of the y axis*/
+    opacity: 1; /* we make the window visible when active */ 
+    transform: translate(-50%, -50%) scale(1); /* 0 is the middle of the x axis, -50% of the height of this window, it means it moves upwards half of its size from the middle of the screen we sat that was 50%, the window is located exactly after the 50% so we need to re center it with this */
+    transition: top 0ms ease-in-out 0ms,       /* from non active to active */
+                opacity 200ms ease-in-out 0ms,
+                transform 300ms ease-in-out 0ms;
+}
+
+
+.finalScore {
+    
+}
+
+.score{
+    position: relative;
+    height: 90%;
+    width: 30%;
+    background-color: darkgreen;
 }
