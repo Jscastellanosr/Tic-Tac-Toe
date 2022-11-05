@@ -31,8 +31,11 @@ let boardflow = (function(){
     const board = document.querySelector('.gameBoard');
     const rounds = document.querySelector('#rounds');
     const score = document.querySelector('.score');
+    const p2Label = document.querySelector('.labelP2')
+    const computerName = document.querySelector('.computerName')
     let P1Name = document.querySelector('#name1');
     let P2Name = document.querySelector('#name2');
+
     let gameVSAI; 
     let P1Ready = false;
     let P2Ready = false;
@@ -53,12 +56,18 @@ let boardflow = (function(){
         selectionScreen.classList.toggle('inactive')
         gameVSAI = true;
 
+        if (gameVSAI == true) {
+            P2Name.classList.toggle('inactive');
+            p2Label.classList.toggle('inactive');
+            computerName.classList.toggle('inactive');
+        };
+
     })
+
 
 
     iconsP1.forEach(icon =>{
         icon.dataset.checked = false;
-
         icon.addEventListener('click', ()=> {
             iconsP1.forEach(icon => icon.dataset.checked = false);
             icon.dataset.checked = true;
@@ -67,7 +76,6 @@ let boardflow = (function(){
     })
     iconsP2.forEach(icon =>{
         icon.dataset.checked = false;
-
         icon.addEventListener('click', ()=> {
             iconsP2.forEach(icon => icon.dataset.checked = false);
             icon.dataset.checked = true;
@@ -105,10 +113,14 @@ let boardflow = (function(){
     selectP2.addEventListener('click', ()=> {
         let pkmnP2;
 
-        if(!P2Name.value) {
-            P2Name.classList.add('emptyField')
-            return;
+
+        if (gameVSAI == false) {
+            if(!P2Name.value) {
+                P2Name.classList.add('emptyField')
+                return;
+            }
         }
+        
 
         iconsP2.forEach(icon => {
             if(icon.dataset.checked == 'true') {
@@ -120,7 +132,9 @@ let boardflow = (function(){
             return;
         }
 
-        P2 = createPlayer(P2Name.value, 1, pkmnP2.alt, pkmnP2.src)
+        gameVSAI == false? P2 = createPlayer(P2Name.value, 1, pkmnP2.alt, pkmnP2.src) : P2 = createPlayer('Computer', 1, pkmnP2.alt, pkmnP2.src)
+
+        
         console.log(P2.getPName())
         console.log(P2.getPNumber())
         console.log(P2.getPURL())
@@ -151,7 +165,7 @@ let boardflow = (function(){
         score.classList.toggle('inactive')
         selectionScreen.classList.toggle('inactive');
         board.classList.toggle('inactive');
-        displayControllerMod.getGameData(P1, P2, rounds.value);
+        displayControllerMod.getGameData(P1, P2, rounds.value, gameVSAI);
         console.log('READYYY')
         console.log(P1, P2)
     })
@@ -206,7 +220,6 @@ let displayControllerMod = (function(){
 
             turn = turn+1;
 
-
             let symbol;
             let poke;
             
@@ -226,25 +239,8 @@ let displayControllerMod = (function(){
                 node.dataset.checked = true;
 
                 const tempBoard = gameModule.getBoard()
-                
 
-                for (i=0;i<=8;i++){
-                    if (gameModule.getBoard()[i] != null && 
-                        ((gameModule.getBoard()[i] == gameModule.getBoard()[i+3] && gameModule.getBoard()[i]== gameModule.getBoard()[i+6])||
-                        ((i == 0 || i == 3 || i == 6) && gameModule.getBoard()[i] == gameModule.getBoard()[i+1] && gameModule.getBoard()[i]== gameModule.getBoard()[i+2]))){
-                        console.log('aasd')
-                    
-                        playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
-                        roundOver(roundwinner, false);
-                        return;
-                    }
-                }
-                if(((gameModule.getBoard()[0] != null && gameModule.getBoard()[0] == gameModule.getBoard()[4] && gameModule.getBoard()[0] == gameModule.getBoard()[8])||
-                    (gameModule.getBoard()[2] != null && gameModule.getBoard()[2] == gameModule.getBoard()[4] && gameModule.getBoard()[2] == gameModule.getBoard()[6]))){
-                    playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
-                    roundOver(roundwinner, false);
-                    return;
-                }
+                if (checkGame()) {return}              
 
                 playerTurn == 1? playerTurn = 2: playerTurn = 1;
 
@@ -253,6 +249,25 @@ let displayControllerMod = (function(){
 
             }
             });
+
+            const checkGame = () => {
+                for (i=0;i<=8;i++){
+                    if (gameModule.getBoard()[i] != null && 
+                        ((gameModule.getBoard()[i] == gameModule.getBoard()[i+3] && gameModule.getBoard()[i]== gameModule.getBoard()[i+6])||
+                        ((i == 0 || i == 3 || i == 6) && gameModule.getBoard()[i] == gameModule.getBoard()[i+1] && gameModule.getBoard()[i]== gameModule.getBoard()[i+2]))){
+                        console.log('aasd')
+                        playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
+                        roundOver(roundwinner, false);
+                        return true;
+                    }
+                }
+                if(((gameModule.getBoard()[0] != null && gameModule.getBoard()[0] == gameModule.getBoard()[4] && gameModule.getBoard()[0] == gameModule.getBoard()[8])||
+                    (gameModule.getBoard()[2] != null && gameModule.getBoard()[2] == gameModule.getBoard()[4] && gameModule.getBoard()[2] == gameModule.getBoard()[6]))){
+                    playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
+                    roundOver(roundwinner, false);
+                    return true;
+                }
+            }
         
     });
 
@@ -266,8 +281,6 @@ let displayControllerMod = (function(){
         if(!tie){
             
 
-
-            
 
             if (winner == player1.getPName()) player1.scoreUp();
             if (winner == player2.getPName()) player2.scoreUp();
@@ -316,10 +329,11 @@ let displayControllerMod = (function(){
         }
     }
 
-    const getGameData = (P1, P2, Rounds) => {
+    const getGameData = (P1, P2, Rounds, gameVSAI) => {
         player1 = P1;
         player2 = P2;
         rounds = Rounds;
+        AI = gameVSAI;
     }
 
     const showVWindow = (victoryTXT, gameOverTXT, gameOver) => {
