@@ -231,7 +231,7 @@ let displayControllerMod = (function(){
 
             if(node.getAttribute('data-checked') == 'false') {
                 turn = turn+1;
-                
+                let tempBoard = gameModule.getBoard()
                 
                 let mark = document.createElement('img');
                 mark.src = symbol;
@@ -239,8 +239,6 @@ let displayControllerMod = (function(){
                 gameModule.modBoard(node.index, poke);
 
                 node.dataset.checked = true;
-
-                
 
                 if (checkGame()) {return}    
                        
@@ -252,7 +250,7 @@ let displayControllerMod = (function(){
                     turn = turn+1;
 
                     console.log('computers turn');
-                    /*symbol = player2.getPURL();
+                    symbol = player2.getPURL();
                     poke = player2.getpkmn();
                     let available = []
                     for(i = 0; i <= 8 ; i++) {
@@ -266,9 +264,12 @@ let displayControllerMod = (function(){
                     gridBoxes[computerMove].appendChild(compMark);
                     gameModule.modBoard(computerMove, poke);
                     gridBoxes[computerMove].dataset.checked = true;
-                    if (checkGame()) {return};*/
+                    if (checkGame()) {return};
 
-                    let tempBoard = gameModule.getBoard()
+                    
+
+
+
 
 
                     
@@ -279,6 +280,9 @@ let displayControllerMod = (function(){
 
                 
                 
+
+
+
 
             }
         });
