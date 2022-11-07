@@ -1,6 +1,6 @@
 /*array inside game module*/
 let gameModule = (function(){
-    let board = [,,,,,,,,];
+    let board = new Array(9);
     const getBoard = () => {
         return board;
     }
@@ -8,7 +8,7 @@ let gameModule = (function(){
         board[index] = value;
     }
     const clearBoard = () => {
-        board = [,,,,,,,,];
+        board = new Array(9);
     }
 
 
@@ -205,6 +205,7 @@ let displayControllerMod = (function(){
     let turn = 0;
     const finalTurn = 9;
     let roundwinner;
+    let AI = false;
     
 
 
@@ -218,7 +219,7 @@ let displayControllerMod = (function(){
         
         node.addEventListener('click', ()=>{
 
-            turn = turn+1;
+            
 
             let symbol;
             let poke;
@@ -229,47 +230,81 @@ let displayControllerMod = (function(){
             
 
             if(node.getAttribute('data-checked') == 'false') {
+                turn = turn+1;
                 
                 
-                const mark = document.createElement('img');
+                let mark = document.createElement('img');
                 mark.src = symbol;
                 node.appendChild(mark);
                 gameModule.modBoard(node.index, poke);
 
                 node.dataset.checked = true;
 
-                const tempBoard = gameModule.getBoard()
+                
 
-                if (checkGame()) {return}              
-
+                if (checkGame()) {return}    
+                       
                 playerTurn == 1? playerTurn = 2: playerTurn = 1;
+                console.log(symbol)
+                if (turn == finalTurn)roundOver(undefined, true);
 
-                if (turn == finalTurn)roundOver(true);
+                if(playerTurn == 2 && AI == true) {
+                    turn = turn+1;
+
+                    console.log('computers turn');
+                    /*symbol = player2.getPURL();
+                    poke = player2.getpkmn();
+                    let available = []
+                    for(i = 0; i <= 8 ; i++) {
+                        if(tempBoard[i] == null) available.push(i)
+                    }     
+                    
+                    let computerMove = available[Math.round(Math.random()*(available.length - 1))]
+
+                    let compMark = document.createElement('img');
+                    compMark.src = symbol;
+                    gridBoxes[computerMove].appendChild(compMark);
+                    gameModule.modBoard(computerMove, poke);
+                    gridBoxes[computerMove].dataset.checked = true;
+                    if (checkGame()) {return};*/
+
+                    let tempBoard = gameModule.getBoard()
+
+
+                    
+
+                    playerTurn == 1? playerTurn = 2: playerTurn = 1;
+                }
+
+
+                
                 
 
             }
-            });
+        });
 
-            const checkGame = () => {
-                for (i=0;i<=8;i++){
-                    if (gameModule.getBoard()[i] != null && 
-                        ((gameModule.getBoard()[i] == gameModule.getBoard()[i+3] && gameModule.getBoard()[i]== gameModule.getBoard()[i+6])||
-                        ((i == 0 || i == 3 || i == 6) && gameModule.getBoard()[i] == gameModule.getBoard()[i+1] && gameModule.getBoard()[i]== gameModule.getBoard()[i+2]))){
-                        console.log('aasd')
-                        playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
-                        roundOver(roundwinner, false);
-                        return true;
-                    }
-                }
-                if(((gameModule.getBoard()[0] != null && gameModule.getBoard()[0] == gameModule.getBoard()[4] && gameModule.getBoard()[0] == gameModule.getBoard()[8])||
-                    (gameModule.getBoard()[2] != null && gameModule.getBoard()[2] == gameModule.getBoard()[4] && gameModule.getBoard()[2] == gameModule.getBoard()[6]))){
-                    playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
-                    roundOver(roundwinner, false);
-                    return true;
-                }
-            }
+            
         
     });
+    
+    const checkGame = () => {
+        for (i=0;i<=8;i++){
+            if (gameModule.getBoard()[i] != null && 
+                ((gameModule.getBoard()[i] == gameModule.getBoard()[i+3] && gameModule.getBoard()[i]== gameModule.getBoard()[i+6])||
+                ((i == 0 || i == 3 || i == 6) && gameModule.getBoard()[i] == gameModule.getBoard()[i+1] && gameModule.getBoard()[i]== gameModule.getBoard()[i+2]))){
+                console.log('aasd')
+                playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
+                roundOver(roundwinner, false);
+                return true;
+            }
+        }
+        if(((gameModule.getBoard()[0] != null && gameModule.getBoard()[0] == gameModule.getBoard()[4] && gameModule.getBoard()[0] == gameModule.getBoard()[8])||
+            (gameModule.getBoard()[2] != null && gameModule.getBoard()[2] == gameModule.getBoard()[4] && gameModule.getBoard()[2] == gameModule.getBoard()[6]))){
+            playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
+            roundOver(roundwinner, false);
+            return true;
+        }
+    }
 
     
     function roundOver (winner, tie) {
