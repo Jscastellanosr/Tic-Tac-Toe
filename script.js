@@ -231,7 +231,7 @@ let displayControllerMod = (function(){
 
             if(node.getAttribute('data-checked') == 'false') {
                 turn = turn+1;
-                let tempBoard = gameModule.getBoard()
+                
                 
                 let mark = document.createElement('img');
                 mark.src = symbol;
@@ -248,6 +248,7 @@ let displayControllerMod = (function(){
 
                 if(playerTurn == 2 && AI == true) {
                     turn = turn+1;
+                    let tempBoard = gameModule.getBoard()
 
                     console.log('computers turn');
                     symbol = player2.getPURL();
