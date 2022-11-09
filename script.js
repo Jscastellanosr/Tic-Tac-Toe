@@ -240,7 +240,7 @@ let displayControllerMod = (function(){
 
                 node.dataset.checked = true;
 
-                if (checkGame()) {return}    
+                if (checkGame(gameModule.getBoard())) {return}    
                        
                 playerTurn == 1? playerTurn = 2: playerTurn = 1;
                 console.log(symbol)
@@ -249,8 +249,10 @@ let displayControllerMod = (function(){
                 if(playerTurn == 2 && AI == true) {
                     turn = turn+1;
                     let tempBoard = gameModule.getBoard()
-
                     console.log('computers turn');
+
+
+                    /*
                     symbol = player2.getPURL();
                     poke = player2.getpkmn();
                     let available = []
@@ -265,11 +267,11 @@ let displayControllerMod = (function(){
                     gridBoxes[computerMove].appendChild(compMark);
                     gameModule.modBoard(computerMove, poke);
                     gridBoxes[computerMove].dataset.checked = true;
-                    if (checkGame()) {return};
+                    if (checkGame()) {return};*/
 
                     
 
-
+                    bestMove(tempBoard, playerTurn);
 
 
 
@@ -280,7 +282,65 @@ let displayControllerMod = (function(){
 
 
                 
-                
+                function bestMove (board, playerTurn) {
+
+                    let available = [];
+
+                    console.log(board)
+                    console.log(player1.getpkmn())
+                    console.log(player2.getpkmn())
+
+                    for(i = 0; i <= 8; i++){
+                        if(board[i] == null) available.push(i)
+                    }
+
+                    let tempValue;
+
+
+                    available.forEach(option => {
+
+
+                        let tempboard = new Array(9);
+
+                        for(i = 0; i<9 ; i++){
+                            tempboard[i] = board[i]
+                        }
+
+                        if(playerTurn == 1) {
+                            tempboard[option] = player1.getpkmn()
+                            playerTurn == 1? playerTurn = 2: playerTurn = 1;
+                            if(checkGame(tempboard)) {
+
+                                if(tempValue > -1) tempValue = -1;
+                                
+                                
+                            } else {
+                                
+                                tempValue = bestMove(tempboard, playerTurn);
+                            }
+                            
+                        }else if(playerTurn == 2){
+                            tempboard[option] = player2.getpkmn()
+                            playerTurn == 1? playerTurn = 2: playerTurn = 1;
+                            if(checkGame(tempboard)) {
+
+                                tempValue = 1;
+                                
+                            } else {
+                                
+                                tempValue = bestMove(tempboard, playerTurn);
+                            }
+                            
+                        }
+                    })
+
+                    console.log(tempValue)
+
+                    return(tempValue)
+
+                    
+
+                }
 
 
 
@@ -292,19 +352,19 @@ let displayControllerMod = (function(){
         
     });
     
-    const checkGame = () => {
+    const checkGame = (board) => {
         for (i=0;i<=8;i++){
-            if (gameModule.getBoard()[i] != null && 
-                ((gameModule.getBoard()[i] == gameModule.getBoard()[i+3] && gameModule.getBoard()[i]== gameModule.getBoard()[i+6])||
-                ((i == 0 || i == 3 || i == 6) && gameModule.getBoard()[i] == gameModule.getBoard()[i+1] && gameModule.getBoard()[i]== gameModule.getBoard()[i+2]))){
+            if (board[i] != null && 
+                ((board[i] == board[i+3] && board[i]== board[i+6])||
+                ((i == 0 || i == 3 || i == 6) && board[i] == board[i+1] && board[i]== board[i+2]))){
                 console.log('aasd')
                 playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
                 roundOver(roundwinner, false);
                 return true;
             }
         }
-        if(((gameModule.getBoard()[0] != null && gameModule.getBoard()[0] == gameModule.getBoard()[4] && gameModule.getBoard()[0] == gameModule.getBoard()[8])||
-            (gameModule.getBoard()[2] != null && gameModule.getBoard()[2] == gameModule.getBoard()[4] && gameModule.getBoard()[2] == gameModule.getBoard()[6]))){
+        if(((board[0] != null && board[0] == board[4] && board[0] == board[8])||
+            (board[2] != null && board[2] == board[4] && board[2] == board[6]))){
             playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
             roundOver(roundwinner, false);
             return true;
