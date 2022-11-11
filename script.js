@@ -339,7 +339,7 @@ let displayControllerMod = (function(){
                     }
 
                     if(pTurn == 1){
-                        let bestScore;
+                        let bestScore = Infinity;
                         for(let i=0; i<9; i++){
                             if(tempBoard[i] == null){
                                 tempBoard[i] = player1.getpkmn();
@@ -347,29 +347,21 @@ let displayControllerMod = (function(){
                                 
                                 tempBoard[i] = null;
 
-                                if (bestScore == null) {
-                                    bestScore = score;
-                                }else if (bestScore > score){
-                                    bestScore = score;
-                                }
+                                if (bestScore > score) bestScore = score;
                                 
                             }
                         }
                         return bestScore;
                     }else if(pTurn == 2){
                         
-                        let bestScore;
+                        let bestScore = -Infinity;
                         for(let i=0; i<9; i++){
                             if(tempBoard[i] == null){
                                 tempBoard[i] = player2.getpkmn();
                                 let score = minmax(tempBoard, 1, boardTurn + 1, depth + 1)
                                 tempBoard[i] = null;
 
-                                if (bestScore == null) {
-                                    bestScore = score;
-                                }else if (bestScore < score){
-                                    bestScore = score;
-                                }
+                                if (bestScore < score) bestScore = score;
                             }
                         }
                         
