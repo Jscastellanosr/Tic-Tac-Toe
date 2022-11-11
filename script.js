@@ -294,11 +294,12 @@ let displayControllerMod = (function(){
                         console.log("i: " + i)
                         if(currentBoard[i] == null) {
                             currentBoard[i] = player2.getpkmn();
-                            console.log("playerTurn" + playerTurn)
-                            console.log("be i: " + i)
                             let score =  minmax(currentBoard, 1, turn, 0);
-                            console.log("af i: " + i)
-                            console.log("scoreeee: " + score)
+                            if(checkGame(currentBoard, true)){
+                                bestScore = score;
+                                bestBox = i;
+                                break;
+                            }
                             currentBoard[i] = null;  
                             if(score > bestScore) {
                                 bestScore = score;
@@ -306,8 +307,10 @@ let displayControllerMod = (function(){
                             }                         
                         }
                     }
+
+                    if (turn == 6) console.log("best score: " + bestScore + "." + "bestbox: " + bestBox)
                     
-                    console.log("bestbox: " + bestBox)
+                    
 
                     let compMark = document.createElement('img');
                     compMark.src = player2.getPURL();
@@ -320,6 +323,8 @@ let displayControllerMod = (function(){
 
                 }
                 function minmax(tempBoard, pTurn, boardTurn, depth){
+
+                    
 
 
                     if (checkGame(tempBoard, true) && pTurn == 1){
@@ -350,9 +355,7 @@ let displayControllerMod = (function(){
                                 
                             }
                         }
-                       
                         return bestScore;
-
                     }else if(pTurn == 2){
                         
                         let bestScore;
