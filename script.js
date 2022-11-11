@@ -227,8 +227,10 @@ let displayControllerMod = (function(){
 
             playerTurn == 1? symbol = player1.getPURL(): symbol = player2.getPURL();
             playerTurn == 1? poke = player1.getpkmn(): poke = player2.getpkmn();
+            console.log(node.index)
             
 
+            /*if(gameModule.getBoard()[node.index] == null)*/
             if(node.getAttribute('data-checked') == 'false') {
                 turn = turn+1;
                 
@@ -269,7 +271,7 @@ let displayControllerMod = (function(){
 
                     
 
-                    bestMove(gameModule.getBoard(), playerTurn, round);
+                    bestMove(gameModule.getBoard());
 
                     if (checkGame(gameModule.getBoard())) {return}   
 
@@ -278,26 +280,24 @@ let displayControllerMod = (function(){
 
 
                 
-                function bestMove (currentBoard, cTurn, cRound) {
+                function bestMove (currentBoard) {
 
                     console.log(currentBoard)
                     console.log(player1.getpkmn())
                     console.log(player2.getpkmn())
-
-                    let Tpoke;
-                    let Tsymbol;
-
-                    cTurn == 1? Tsymbol = player1.getPURL(): Tsymbol = player2.getPURL();
-                    cTurn == 1? Tpoke = player1.getpkmn(): Tpoke = player2.getpkmn();
 
 
                     let bestScore = -Infinity;
                     let bestBox;
 
                     for(i = 0; i <= 8; i++){
+                        console.log("i: " + i)
                         if(currentBoard[i] == null) {
-                            currentBoard[i] = Tpoke;
-                            let score =  minmax(currentBoard, cTurn, cRound);
+                            currentBoard[i] = player2.getpkmn();
+                            console.log("playerTurn" + playerTurn)
+                            console.log("be i: " + i)
+                            let score =  minmax(currentBoard, 1, turn, 0);
+                            console.log("af i: " + i)
                             console.log("scoreeee: " + score)
                             currentBoard[i] = null;  
                             if(score > bestScore) {
@@ -306,11 +306,11 @@ let displayControllerMod = (function(){
                             }                         
                         }
                     }
-
                     
+                    console.log("bestbox: " + bestBox)
 
                     let compMark = document.createElement('img');
-                    compMark.src = Tsymbol;
+                    compMark.src = player2.getPURL();
                     gridBoxes[bestBox].appendChild(compMark);
                     gameModule.modBoard(bestBox, player2.getpkmn());
                     gridBoxes[bestBox].dataset.checked = true;
@@ -319,12 +319,64 @@ let displayControllerMod = (function(){
                     
 
                 }
-                function minmax(tempBoard, pTurn, currentRound){
+                function minmax(tempBoard, pTurn, boardTurn, depth){
 
-                    return 1
+
+                    if (checkGame(tempBoard, true) && pTurn == 1){
+                        
+                        return 10;
+                    }else if(checkGame(tempBoard, true) && pTurn == 2){
+                        
+                        return -10;
+                    }else if(boardTurn == finalTurn){
+                        
+                        return 0;
+                    }
+
+                    if(pTurn == 1){
+                        let bestScore;
+                        for(let i=0; i<9; i++){
+                            if(tempBoard[i] == null){
+                                tempBoard[i] = player1.getpkmn();
+                                let score = minmax(tempBoard, 2, boardTurn + 1, depth + 1)
+                                
+                                tempBoard[i] = null;
+
+                                if (bestScore == null) {
+                                    bestScore = score;
+                                }else if (bestScore > score){
+                                    bestScore = score;
+                                }
+                                
+                            }
+                        }
+                       
+                        return bestScore;
+
+                    }else if(pTurn == 2){
+                        
+                        let bestScore;
+                        for(let i=0; i<9; i++){
+                            if(tempBoard[i] == null){
+                                tempBoard[i] = player2.getpkmn();
+                                let score = minmax(tempBoard, 1, boardTurn + 1, depth + 1)
+                                tempBoard[i] = null;
+
+                                if (bestScore == null) {
+                                    bestScore = score;
+                                }else if (bestScore < score){
+                                    bestScore = score;
+                                }
+                            }
+                        }
+                        
+                        return bestScore;
+                    }
 
 
                 }
+
+                
 
 
 
@@ -338,10 +390,10 @@ let displayControllerMod = (function(){
     const checkGame = (board, test) => {
 
         
-        for (i=0;i<=8;i++){
-            if (board[i] != null && 
-                ((board[i] == board[i+3] && board[i]== board[i+6])||
-                ((i == 0 || i == 3 || i == 6) && board[i] == board[i+1] && board[i]== board[i+2]))){
+        for (j=0;j<=8;j++){
+            if (board[j] != null && 
+                ((board[j] == board[j+3] && board[j]== board[j+6])||
+                ((j == 0 || j == 3 || j == 6) && board[j] == board[j+1] && board[j]== board[j+2]))){
                 playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
                 if(test == undefined)roundOver(roundwinner, false);
                 return true;
