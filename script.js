@@ -3,15 +3,13 @@ let gameModule = (function(){
     let board = new Array(9);
     const getBoard = () => {
         return board;
-    }
+    };
     const modBoard = (index, value) => {
         board[index] = value;
-    }
+    };
     const clearBoard = () => {
         board = new Array(9);
-    }
-
-
+    };
     return{getBoard, modBoard, clearBoard}
 })();
 
@@ -19,8 +17,8 @@ let gameModule = (function(){
 let boardflow = (function(){
     const gameSelection = document.querySelector('.gameSelection');
     const selectionScreen = document.querySelector('#selectionScreen');
-    const pvp = document.querySelector('.pvp');
-    const pvAI = document.querySelector('.pvAI')
+    const pvp = document.querySelector('.pvp button');
+    const pvAI = document.querySelector('.pvAI button')
     const iconsP1 = document.querySelectorAll('.player1 .pkmnTAB .icon');
     const iconsP2 = document.querySelectorAll('.player2 .pkmnTAB .icon');
     const selectP1 = document.querySelector('.player1 button');
@@ -33,35 +31,52 @@ let boardflow = (function(){
     const score = document.querySelector('.score');
     const p2Label = document.querySelector('.labelP2')
     const computerName = document.querySelector('.computerName')
+    const difficulty = document.querySelector('#difficulty')
+    const error = document.querySelector('.missingInfo')
     let P1Name = document.querySelector('#name1');
     let P2Name = document.querySelector('#name2');
+    
 
+    let level;
     let gameVSAI; 
     let P1Ready = false;
     let P2Ready = false;
     let P1;
     let P2;
 
-    
-    
-    pvp.addEventListener('click', ()=>{
-        gameSelection.classList.toggle('inactive')
-        selectionScreen.classList.toggle('inactive')
-        gameVSAI = false;
 
+    pvp.addEventListener('mousedown', ()=> {
+        pvp.classList.add('clicked');
+    });   
+    pvp.addEventListener('mouseup', ()=> {
+        pvp.classList.remove('clicked');
+    });  
+    pvp.addEventListener('click', ()=>{
+        setTimeout(() => {
+            gameSelection.classList.toggle('inactive');
+            selectionScreen.classList.toggle('inactive');
+            gameVSAI = false;
+        }, 50);
     })
 
+
+    pvAI.addEventListener('mousedown', ()=> {
+        pvAI.classList.add('clicked');
+    });
+    pvAI.addEventListener('mouseup', ()=> {
+        pvAI.classList.remove('clicked');
+    });
     pvAI.addEventListener('click', ()=>{
-        gameSelection.classList.toggle('inactive')
-        selectionScreen.classList.toggle('inactive')
-        gameVSAI = true;
-
-        if (gameVSAI == true) {
-            P2Name.classList.toggle('inactive');
-            p2Label.classList.toggle('inactive');
-            computerName.classList.toggle('inactive');
-        };
-
+        setTimeout(() => {
+            gameSelection.classList.toggle('inactive')
+            selectionScreen.classList.toggle('inactive')
+            gameVSAI = true;
+        }, 50);
+        
+        P2Name.classList.toggle('inactive');
+        p2Label.classList.toggle('inactive');
+        computerName.classList.toggle('inactive');
+    
     })
 
 
@@ -69,16 +84,23 @@ let boardflow = (function(){
     iconsP1.forEach(icon =>{
         icon.dataset.checked = false;
         icon.addEventListener('click', ()=> {
-            iconsP1.forEach(icon => icon.dataset.checked = false);
+            iconsP1.forEach(icon => {
+                icon.dataset.checked = false;
+                icon.classList.remove('selectedP1')
+            });
             icon.dataset.checked = true;
-
+            icon.classList.add('selectedP1')
         })
     })
     iconsP2.forEach(icon =>{
         icon.dataset.checked = false;
         icon.addEventListener('click', ()=> {
-            iconsP2.forEach(icon => icon.dataset.checked = false);
+            iconsP2.forEach(icon => {
+                icon.dataset.checked = false
+                icon.classList.remove('selectedP2')
+            });
             icon.dataset.checked = true;
+            icon.classList.add('selectedP2')
 
         })
     })
@@ -103,22 +125,23 @@ let boardflow = (function(){
         }
 
         P1 = createPlayer(P1Name.value, 1, pkmnP1.alt ,pkmnP1.src)
-        console.log(P1.getPName())
-        console.log(P1.getPNumber())
-        console.log(P1.getPURL())
+
         togglePKMNScreen('.player1', '.player1s', pkmnP1, '.P1Selected')
         P1Ready = true;
 
     })
+
+
     selectP2.addEventListener('click', ()=> {
         let pkmnP2;
-
 
         if (gameVSAI == false) {
             if(!P2Name.value) {
                 P2Name.classList.add('emptyField')
                 return;
             }
+        } else {
+            level = difficulty.value;
         }
         
 
@@ -135,9 +158,7 @@ let boardflow = (function(){
         gameVSAI == false? P2 = createPlayer(P2Name.value, 1, pkmnP2.alt, pkmnP2.src) : P2 = createPlayer('Computer', 1, pkmnP2.alt, pkmnP2.src)
 
         
-        console.log(P2.getPName())
-        console.log(P2.getPNumber())
-        console.log(P2.getPURL())
+
 
         togglePKMNScreen('.player2', '.player2s', pkmnP2, '.P2Selected')
         P2Ready = true;
@@ -156,19 +177,36 @@ let boardflow = (function(){
 
     start.addEventListener('click', () => {
 
+        if (checkMissingInfo()) {return};
 
-        if (!P1Ready || !P2Ready || !rounds.value) {
-            console.log('not ready');
-            return;
-        }
 
         score.classList.toggle('inactive')
         selectionScreen.classList.toggle('inactive');
         board.classList.toggle('inactive');
-        displayControllerMod.getGameData(P1, P2, rounds.value, gameVSAI);
+        displayControllerMod.getGameData(P1, P2, rounds.value, gameVSAI, level);
         console.log('READYYY')
         console.log(P1, P2)
     })
+
+    function checkMissingInfo() {
+        if (!P1Ready || !P2Ready || !rounds.value) {
+            error.classList.remove('inactive')
+            if (!P1Ready) {
+                error.textContent = 'Player 1 is not ready'
+            }else if(!P2Ready){
+                error.textContent = 'Player 2 is not ready'
+            }else if(!rounds.value){
+                error.textContent = 'Select rounds'
+            }
+            
+            setTimeout(() => {
+                error.classList.add('inactive')
+            }, 1000);
+
+            console.log('not ready');
+            return true;
+        }
+    }
 
 
 
@@ -193,19 +231,24 @@ let boardflow = (function(){
 let displayControllerMod = (function(){
 
 
-    const victoryPopUp = document.querySelector('#popUp')
-    const victoryWindow = document.querySelector('.victoryWindow')
-    const victoryText = document.querySelector('.victoryText')
-    const finalScore = document.querySelector('.finalScore')
-    const menuButton = document.querySelector('.mainMenu')
+    const victoryPopUp = document.querySelector('#popUp');
+    const victoryWindow = document.querySelector('.victoryWindow');
+    const victoryText = document.querySelector('.victoryText');
+    const finalScore = document.querySelector('.finalScore');
+    const menuButton = document.querySelector('.mainMenu');
+    const boardRounds = document.querySelector('.boardRounds')
+    const P1Points = document.querySelector('.P1Points');
+    const P2Points = document.querySelector('.P2Points');
     let player1;
     let player2;
+    let difficulty;
     let rounds;
     let round = 0;
     let turn = 0;
     const finalTurn = 9;
     let roundwinner;
     let AI = false;
+    let AImedium = 2;
     
 
 
@@ -218,8 +261,6 @@ let displayControllerMod = (function(){
         gridIndex++;
         
         node.addEventListener('click', ()=>{
-
-            
 
             let symbol;
             let poke;
@@ -249,32 +290,48 @@ let displayControllerMod = (function(){
                 if(playerTurn == 2 && AI == true) {
                     turn = turn+1;
                     
-                    console.log('computers turn');
+                
+
+                    if(difficulty == 'hard') {
+                        hardAI ();                        
+                    }else if(difficulty == 'medium'){
+                        if (AImedium == 1){
+                            hardAI (); 
+                            AImedium = 2;
+                        }else if(AImedium == 2){
+                            easyAI ();
+                            AImedium = 1;
+                        }             
+
+                    }else if(difficulty == 'easy') {
+                        easyAI ();
+                    }
 
 
-                    /*
-                    symbol = player2.getPURL();
+                }
+
+                function easyAI () {
+                    console.log('ezAI')
                     poke = player2.getpkmn();
                     let available = []
                     for(i = 0; i <= 8 ; i++) {
-                        if(tempBoard[i] == null) available.push(i)
-                    }     
-                    
+                        if(gameModule.getBoard()[i] == null) available.push(i)
+                    }        
                     let computerMove = available[Math.round(Math.random()*(available.length - 1))]
-
                     let compMark = document.createElement('img');
-                    compMark.src = symbol;
+                    compMark.src = player2.getPURL();;
                     gridBoxes[computerMove].appendChild(compMark);
                     gameModule.modBoard(computerMove, poke);
-                    gridBoxes[computerMove].dataset.checked = true;
-                    if (checkGame()) {return};*/
+                    gridBoxes[computerMove].dataset.checked = true;                   
+                    if (checkGame(gameModule.getBoard())) {return}
+                    playerTurn = 1;
+                }
 
-                    
-
+                function hardAI () {
+                    console.log('hardAI')
+                    console.log(gameModule.getBoard())
                     bestMove(gameModule.getBoard());
-
                     if (checkGame(gameModule.getBoard())) {return}   
-
                     playerTurn = 1;
                 }
 
@@ -282,16 +339,12 @@ let displayControllerMod = (function(){
                 
                 function bestMove (currentBoard) {
 
-                    console.log(currentBoard)
-                    console.log(player1.getpkmn())
-                    console.log(player2.getpkmn())
 
 
                     let bestScore = -Infinity;
                     let bestBox;
 
                     for(i = 0; i <= 8; i++){
-                        console.log("i: " + i)
                         if(currentBoard[i] == null) {
                             currentBoard[i] = player2.getpkmn();
                             let score =  minmax(currentBoard, 1, turn, 0);
@@ -307,8 +360,6 @@ let displayControllerMod = (function(){
                             }                         
                         }
                     }
-
-                    if (turn == 6) console.log("best score: " + bestScore + "." + "bestbox: " + bestBox)
                     
                     
 
@@ -317,15 +368,14 @@ let displayControllerMod = (function(){
                     gridBoxes[bestBox].appendChild(compMark);
                     gameModule.modBoard(bestBox, player2.getpkmn());
                     gridBoxes[bestBox].dataset.checked = true;
-                    console.log(gameModule.getBoard())
 
                     
 
                 }
+
+
+
                 function minmax(tempBoard, pTurn, boardTurn, depth){
-
-                    
-
 
                     if (checkGame(tempBoard, true) && pTurn == 1){
                         
@@ -407,14 +457,22 @@ let displayControllerMod = (function(){
 
         let winnerMSG = ""; 
         turn = 0;
+        
         round = round + 1;
+        boardRounds.textContent = `Round :${round}`
 
         if(!tie){
             
 
 
-            if (winner == player1.getPName()) player1.scoreUp();
-            if (winner == player2.getPName()) player2.scoreUp();
+            if (winner == player1.getPName()) {
+                player1.scoreUp();
+                P1Points.textContent = player1.getPScore();
+            }
+            if (winner == player2.getPName()) {
+                player2.scoreUp();
+                P2Points.textContent = player2.getPScore();
+            }
 
 
             console.log('p1: ' + player1.getPScore());
@@ -432,7 +490,7 @@ let displayControllerMod = (function(){
             showVWindow(winnerMSG, undefined, false);
             setTimeout(() => {
                 gameModule.clearBoard();
-                renderArray();
+                clearGrid();
             }, 1000);
         }else {
 
@@ -453,18 +511,19 @@ let displayControllerMod = (function(){
 
     }
 
-    let renderArray = () => {
+    let clearGrid = () => {
         for(let i=0;i<=8; i++) {
             gridBoxes[i].innerHTML = ""
             gridBoxes[i].dataset.checked = false;
         }
     }
 
-    const getGameData = (P1, P2, Rounds, gameVSAI) => {
+    const getGameData = (P1, P2, Rounds, gameVSAI, AILevel) => {
         player1 = P1;
         player2 = P2;
         rounds = Rounds;
         AI = gameVSAI;
+        if(AILevel) difficulty = AILevel;
     }
 
     const showVWindow = (victoryTXT, gameOverTXT, gameOver) => {

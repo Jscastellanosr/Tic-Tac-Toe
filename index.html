@@ -6,16 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="script.js" defer></script>
     <link href="style.css" rel="stylesheet">
+    <link href="buttons.css" rel="stylesheet">
     <title>Tic Tac Toe</title>
 </head>
 <body>
 
-    <header> POKETIC-TAC-TOE</header>
+    <header> P O K E T I C - T A C - T O E</header>
 
     <div class="body">
 
 
-        <div class="score inactive"></div>
+        <div class="score inactive">
+            <div class="boardRounds">Round :0</div>
+            <div class="results">
+                <div class="P1Score">
+                    p1
+                    <div class="P1Points">0</div>
+                </div>
+                <div class="P2Score">
+                    p2
+                    <div class="P2Points">0</div>
+                </div>
+            </div>
+        </div>
 
         <div class="gameSelection">
 
@@ -84,7 +97,16 @@
                             <h3>P2</h3>
                             <label for="name2" class="labelP2">Name:</label>
                             <input type="text" name="name" id="name2">
-                            <h3 class="computerName inactive">Computer</h3>
+                            <div class="computerName inactive">
+                                <h3>Computer</h3>
+                                <select name="difficulty" id="difficulty">
+                                    <option value="easy">Easy</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                    
+                            
                         </div>
                         <div class="pkmnTAB">
                             <div class="icon">
@@ -125,6 +147,7 @@
                 </div>
 
             </div>
+            <div class="missingInfo inactive">asdfb</div>
             <button class="start" id="start">START GAME</button>
             
         </div>

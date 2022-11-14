@@ -1,9 +1,30 @@
+@font-face {
+    font-family: 'Pokemon Solid';
+    src: url('./files/font/PokemonSolidNormal.woff2') format('woff2'),
+         url('./files/font/PokemonSolidNormal.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face{
+    font-family: 'Pokemon RGB';
+    src: url('./files/font/PokemonGB.woff2') format('woff2'),
+         url('./files/font/PokemonGB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+
 *{
     margin: 0 0 0 0;
     padding: 0 0 0 0;
 }
 
 body {
+    background-image: url('./files/images/wp2690555.jpg');
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,14 +34,24 @@ body {
 }
 
 header{
+    display: flex;
+    align-items: center;
+    font-family: 'Pokemon Solid';
+    color: yellow;
+    -webkit-text-stroke: 3px rgb(11, 25, 158);
+    letter-spacing: -5px;
+    font-size: 40px;
     height: 15%;
 }
 .body{
+    box-shadow:0px 0px 20px 20px #7af57a;
+    font-family: 'Pokemon RGB';
     box-sizing: border-box;
     padding: 0.5% 2%; 
-    background-color: coral;
+    background-color: rgb(67, 66, 65, 0.8);
+    border-radius: 30px;
     min-height: 430px;
-    height: 75vh;
+    height: 78vh;
     min-width: 750px;
     width: 65%;
     display: flex;
@@ -30,8 +61,13 @@ header{
 }
 
 
-.gameSelection {
 
+
+.gameSelection {
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .selectionScreen{
@@ -40,6 +76,11 @@ header{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
+}
+
+.computerName{
+    display: flex;
 }
 
 .pkmnSelection{
@@ -47,7 +88,8 @@ header{
     justify-content: space-evenly;
     align-items: center;
     width: 100%;
-    height: 90%;
+    height: 85%;
+    
 
 }
 
@@ -65,13 +107,18 @@ header{
 .player1s,
 .player2s {
     min-height: 360px;
-    height: 90%;
+    height: 105%;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: chartreuse;
+    background-color: rgb(127, 255, 0, .5);
+    border-radius: 20px;
+}
+
+.selectionHeader h3 {
+    font-size: 15px;
 }
 
 
@@ -83,7 +130,7 @@ header{
     height: 0;
     padding-bottom: 87%;
     min-width: 270px;
-    background-color: brown;
+    background-color: rgb(165, 42, 42, 0);
     justify-content: center;
     padding-top: 1%;
 
@@ -92,12 +139,21 @@ header{
 
 
 .icon{
-    background-color: black;
+    background-color: rgb(0, 0, 0, .5);
+    border-radius: 10px;
     width: 30%;
     height: 0;
     padding-bottom: 30%;
     box-sizing: border-box;
     margin: 0.8%;
+}
+
+.selectedP1 {
+    background-color: rgb(23, 54, 210);
+}
+
+.selectedP2 {
+    background-color: rgb(210, 73, 23);
 }
 
 .icon img {
@@ -111,6 +167,9 @@ header{
 }
 
 .rounds {
+    letter-spacing: -2px;
+    font-weight: 800;
+    font-size: 10px;
     width: 7%;
 }
 
@@ -119,6 +178,12 @@ header{
 }
 
 
+.missingInfo {
+    color: rgb(186, 8, 14);
+
+
+}
+
 .start {
     margin-bottom: 10px;
 }
@@ -126,9 +191,11 @@ header{
 
 .P1Selected,
 .P2Selected {
-
     height: 50%;
 }
+
+
+
 
 
 
@@ -144,6 +211,7 @@ header{
 .gameBoard div {
     background-color: aqua;
     box-sizing: border-box;
+    border-radius: 10px;
     flex-basis: 30%;
     height: 30%;
     font-size: 30px;
@@ -180,12 +248,15 @@ header{
 .victoryWindow{
     position: absolute;
     top: 50%;
-    left: -150%; /* we send the window where it cant be seen*/  
+    left: -1150%; /* we send the window where it cant be seen*/  
     opacity: 1; /* we make the window invisible*/
-    background-color: rgb(215, 245, 212);
+    background-color: rgb(122, 245, 122, 0);
+    color: rgb(170, 0, 127);
+    font-family: 'Pokemon Solid';
+    font-size: 40px;
     padding: 20px 30px;
-    width: 200px;
-    box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.5);
+    width: 600px;
+
     border-radius: 20px;
     transform: translate(300%, -50%) scale(1); /* this values are relative to the location it will have when the animation is over*/ 
     transition: left 400ms ease-in-out 0ms,        /* from  active to non active*/
@@ -205,13 +276,43 @@ header{
 }
 
 
-.finalScore {
+.score{
+    position: relative;
+    height: 80%;
+    width: 30%;
+    background-color: rgb(0, 100, 0, .8);
+    border-radius: 30px;
+    font-family: 'Pokemon Solid';
+    font-size: 35px;
     
 }
 
-.score{
-    position: relative;
-    height: 90%;
-    width: 30%;
-    background-color: darkgreen;
+.boardRounds{
+    margin-top: 70px;
+    color: rgb(119, 0, 125);
+}
+
+.results{
+    display: flex;
+    width: 100%;
+    margin-top: 70px;
+}
+
+.P1Score {
+    width: 50%;
+    color: rgb(23, 54, 210);
+}
+
+.P2Score {
+    width: 50%;
+    color: rgb(210, 48, 23);
+}
+
+.finalScore {
+    color: yellow;
+    -webkit-text-stroke: 3px rgb(11, 25, 158);
+}
+
+input {
+    border-radius: 7px;
 }
