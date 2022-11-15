@@ -194,7 +194,11 @@ let boardflow = (function(){
         score.classList.toggle('inactive')
         selectionScreen.classList.toggle('inactive');
         board.classList.toggle('inactive');
-        displayControllerMod.getGameData(P1, P2, rounds.value, gameVSAI, level);
+
+        playersOBJ[0] = P1;
+        playersOBJ[1] = P2;
+
+        displayControllerMod.getGameData(rounds.value, gameVSAI, level);
         console.log('READYYY')
         console.log(P1, P2)
     })
@@ -283,8 +287,7 @@ let displayControllerMod = (function(){
     const boardRounds = document.querySelector('.boardRounds')
     const P1Points = document.querySelector('.P1Points');
     const P2Points = document.querySelector('.P2Points');
-    let player1;
-    let player2;
+
     let difficulty;
     let rounds;
     let round = 0;
@@ -310,8 +313,8 @@ let displayControllerMod = (function(){
             let poke;
             
 
-            playerTurn == 1? symbol = player1.getPURL(): symbol = player2.getPURL();
-            playerTurn == 1? poke = player1.getpkmn(): poke = player2.getpkmn();
+            playerTurn == 1? symbol = playersOBJ[0].getPURL(): symbol = playersOBJ[1].getPURL();
+            playerTurn == 1? poke = playersOBJ[0].getpkmn(): poke = playersOBJ[1].getpkmn();
             console.log(node.index)
             
 
@@ -356,16 +359,16 @@ let displayControllerMod = (function(){
 
                 function easyAI () {
                     console.log('ezAI')
-                    poke = player2.getpkmn();
+                    poke = playersOBJ[1].getpkmn();
                     let available = []
                     for(i = 0; i <= 8 ; i++) {
                         if(gameModule.getBoard()[i] == null) available.push(i)
                     }        
                     let computerMove = available[Math.round(Math.random()*(available.length - 1))]
                     let compMark = document.createElement('img');
-                    compMark.src = player2.getPURL();;
+                    compMark.src = playersOBJ[1].getPURL();;
                     gridBoxes[computerMove].appendChild(compMark);
-                    gameModule.modBoard(computerMove, poke);
+                    gameModule.modBoard(computerMove, playersOBJ[1].getpkmn());
                     gridBoxes[computerMove].dataset.checked = true;                   
                     if (checkGame(gameModule.getBoard())) {return}
                     playerTurn = 1;
@@ -390,7 +393,7 @@ let displayControllerMod = (function(){
 
                     for(i = 0; i <= 8; i++){
                         if(currentBoard[i] == null) {
-                            currentBoard[i] = player2.getpkmn();
+                            currentBoard[i] = playersOBJ[1].getpkmn();
                             let score =  minmax(currentBoard, 1, turn, 0);
                             if(checkGame(currentBoard, true)){
                                 bestScore = score;
@@ -408,9 +411,9 @@ let displayControllerMod = (function(){
                     
 
                     let compMark = document.createElement('img');
-                    compMark.src = player2.getPURL();
+                    compMark.src = playersOBJ[1].getPURL();
                     gridBoxes[bestBox].appendChild(compMark);
-                    gameModule.modBoard(bestBox, player2.getpkmn());
+                    gameModule.modBoard(bestBox, playersOBJ[1].getpkmn());
                     gridBoxes[bestBox].dataset.checked = true;
 
                     
@@ -436,7 +439,7 @@ let displayControllerMod = (function(){
                         let bestScore = Infinity;
                         for(let i=0; i<9; i++){
                             if(tempBoard[i] == null){
-                                tempBoard[i] = player1.getpkmn();
+                                tempBoard[i] = playersOBJ[0].getpkmn();
                                 let score = minmax(tempBoard, 2, boardTurn + 1, depth + 1)
                                 
                                 tempBoard[i] = null;
@@ -451,29 +454,18 @@ let displayControllerMod = (function(){
                         let bestScore = -Infinity;
                         for(let i=0; i<9; i++){
                             if(tempBoard[i] == null){
-                                tempBoard[i] = player2.getpkmn();
+                                tempBoard[i] = playersOBJ[1].getpkmn();
                                 let score = minmax(tempBoard, 1, boardTurn + 1, depth + 1)
                                 tempBoard[i] = null;
 
                                 if (bestScore < score) bestScore = score;
                             }
                         }
-                        
                         return bestScore;
                     }
-
-
                 }
-
-                
-
-
-
             }
-        });
-
-            
-        
+        });       
     });
     
     const checkGame = (board, test) => {
@@ -483,14 +475,14 @@ let displayControllerMod = (function(){
             if (board[j] != null && 
                 ((board[j] == board[j+3] && board[j]== board[j+6])||
                 ((j == 0 || j == 3 || j == 6) && board[j] == board[j+1] && board[j]== board[j+2]))){
-                playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
+                playerTurn == 1? roundwinner = playersOBJ[0].getPName(): roundwinner = playersOBJ[1].getPName()
                 if(test == undefined)roundOver(roundwinner, false);
                 return true;
             }
         }
         if(((board[0] != null && board[0] == board[4] && board[0] == board[8])||
             (board[2] != null && board[2] == board[4] && board[2] == board[6]))){
-            playerTurn == 1? roundwinner = player1.getPName(): roundwinner = player2.getPName()
+            playerTurn == 1? roundwinner = playersOBJ[0].getPName(): roundwinner = playersOBJ[1].getPName()
             if(test == undefined)roundOver(roundwinner, false);
             return true;
         }
@@ -509,18 +501,17 @@ let displayControllerMod = (function(){
             
 
 
-            if (winner == player1.getPName()) {
-                player1.scoreUp();
-                P1Points.textContent = player1.getPScore();
+            if (winner == playersOBJ[0].getPName()) {
+                playersOBJ[0].scoreUp();
+                P1Points.textContent = playersOBJ[0].getPScore();
             }
-            if (winner == player2.getPName()) {
-                player2.scoreUp();
-                P2Points.textContent = player2.getPScore();
+            if (winner == playersOBJ[1].getPName()) {
+                playersOBJ[1].scoreUp();
+                P2Points.textContent = playersOBJ[1].getPScore();
             }
 
-
-            console.log('p1: ' + player1.getPScore());
-            console.log('p2: ' + player2.getPScore());
+            console.log('p1: ' + playersOBJ[0].getPScore());
+            console.log('p2: ' + playersOBJ[1].getPScore());
 
             winnerMSG = `${winner} wins the round`;
 
@@ -539,10 +530,10 @@ let displayControllerMod = (function(){
         }else {
 
             let victoryMSG;
-            if(player1.getPScore()<player2.getPScore()){
-                victoryMSG = `Game Over. ${player2.getPName()} wins!!`;
-            }else if(player1.getPScore()>player2.getPScore()) {
-                victoryMSG = `Game Over. ${player1.getPName()} wins!!`;
+            if(playersOBJ[0].getPScore()<playersOBJ[1].getPScore()){
+                victoryMSG = `Game Over. ${playersOBJ[1].getPName()} wins!!`;
+            }else if(playersOBJ[0].getPScore()>playersOBJ[1].getPScore()) {
+                victoryMSG = `Game Over. ${playersOBJ[0].getPName()} wins!!`;
             }else{
                 victoryMSG = `Game Over. It's a tie!`;
             };
@@ -562,9 +553,7 @@ let displayControllerMod = (function(){
         }
     }
 
-    const getGameData = (P1, P2, Rounds, gameVSAI, AILevel) => {
-        player1 = P1;
-        player2 = P2;
+    const getGameData = (Rounds, gameVSAI, AILevel) => {
         rounds = Rounds;
         AI = gameVSAI;
         if(AILevel) difficulty = AILevel;
@@ -599,18 +588,10 @@ let displayControllerMod = (function(){
                 victoryWindow.classList.toggle('active')
                 finalScore.classList.toggle('inactive')
                 menuButton.classList.toggle('inactive')
-                finalScore.textContent = `${player1.getPScore()} - ${player2.getPScore()}`
-            },1400)
-
-            
+                finalScore.textContent = `${playersOBJ[0].getPScore()} - ${playersOBJ[1].getPScore()}`
+            },1400)           
         }
-
-        
-
     }
-
-
-
     return {getGameData}
 })();
 
@@ -632,7 +613,7 @@ let createPlayer = function(name, number, pkmn, url) {
 
 
 
-
+let playersOBJ = new Array(2)
 
 
 
