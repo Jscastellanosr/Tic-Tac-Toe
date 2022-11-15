@@ -47,10 +47,7 @@ let boardflow = (function(){
 
     pvp.addEventListener('mousedown', ()=> {
         pvp.classList.add('clicked');
-    });   
-    pvp.addEventListener('mouseup', ()=> {
-        pvp.classList.remove('clicked');
-    });  
+    });    
     pvp.addEventListener('click', ()=>{
         setTimeout(() => {
             gameSelection.classList.toggle('inactive');
@@ -58,14 +55,10 @@ let boardflow = (function(){
             gameVSAI = false;
         }, 50);
     })
-
-
     pvAI.addEventListener('mousedown', ()=> {
         pvAI.classList.add('clicked');
     });
-    pvAI.addEventListener('mouseup', ()=> {
-        pvAI.classList.remove('clicked');
-    });
+    
     pvAI.addEventListener('click', ()=>{
         setTimeout(() => {
             gameSelection.classList.toggle('inactive')
@@ -75,9 +68,13 @@ let boardflow = (function(){
         
         P2Name.classList.toggle('inactive');
         p2Label.classList.toggle('inactive');
-        computerName.classList.toggle('inactive');
-    
+        computerName.classList.toggle('inactive');   
     })
+
+    window.addEventListener('mouseup', ()=> {
+        pvp.classList.remove('clicked');
+        pvAI.classList.remove('clicked');
+    }); 
 
 
 
@@ -106,10 +103,17 @@ let boardflow = (function(){
     })
 
 
+    P1Name.addEventListener('click', ()=> {
+        P1Name.classList.remove('emptyField')
+    })
+    P2Name.addEventListener('click', ()=> {
+        P2Name.classList.remove('emptyField')
+    })
+
     selectP1.addEventListener('click', ()=> {
         let pkmnP1=null;
 
-        if(!P1Name.value) {
+        if(!P1Name.value|| checkForErrors(1)) {
             P1Name.classList.add('emptyField')
             return;
         }
@@ -121,7 +125,13 @@ let boardflow = (function(){
         })
 
         if(!pkmnP1) {
+            checkForErrors(4)
             return;
+        }
+
+        
+        if(gameVSAI) {
+            if(checkForErrors(2)) return;
         }
 
         P1 = createPlayer(P1Name.value, 1, pkmnP1.alt ,pkmnP1.src)
@@ -136,7 +146,7 @@ let boardflow = (function(){
         let pkmnP2;
 
         if (gameVSAI == false) {
-            if(!P2Name.value) {
+            if(!P2Name.value || checkForErrors(1)) {
                 P2Name.classList.add('emptyField')
                 return;
             }
@@ -152,6 +162,7 @@ let boardflow = (function(){
         })
 
         if(!pkmnP2) {
+            checkForErrors(4)
             return;
         }
 
@@ -177,7 +188,7 @@ let boardflow = (function(){
 
     start.addEventListener('click', () => {
 
-        if (checkMissingInfo()) {return};
+        if (checkForErrors(3)) {return};
 
 
         score.classList.toggle('inactive')
@@ -188,24 +199,57 @@ let boardflow = (function(){
         console.log(P1, P2)
     })
 
-    function checkMissingInfo() {
-        if (!P1Ready || !P2Ready || !rounds.value) {
-            error.classList.remove('inactive')
-            if (!P1Ready) {
-                error.textContent = 'Player 1 is not ready'
-            }else if(!P2Ready){
-                error.textContent = 'Player 2 is not ready'
-            }else if(!rounds.value){
-                error.textContent = 'Select rounds'
+    function checkForErrors(type) {
+
+        if(type == 1) {
+            if(((P1Ready) && P1.getPName() == P2Name.value) || ((P2Ready) && P2.getPName() == P1Name.value) ){
+                error.classList.remove('inactive')
+                error.textContent = `Both players can't have the same name`
+                setTimeout(() => {
+                    error.classList.add('inactive')
+                }, 1200);
+                return true;
+                
+            };
+        }else if(type == 2) {
+            if(P1Name.value.toLowerCase() == 'computer') {
+                error.classList.remove('inactive')
+                error.textContent = `You can't be the computer!`
+                setTimeout(() => {
+                    error.classList.add('inactive')
+                }, 1200);
+                return true;
             }
-            
+
+        }else if(type == 3){
+            if (!P1Ready || !P2Ready || !rounds.value) {
+                error.classList.remove('inactive')
+                if (!P1Ready) {
+                    error.textContent = 'Player 1 is not ready'
+                }else if(!P2Ready){
+                    error.textContent = 'Player 2 is not ready'
+                }else if(!rounds.value){
+                    error.textContent = 'Select rounds'
+                }
+                
+                setTimeout(() => {
+                    error.classList.add('inactive')
+                }, 1200);
+                console.log('not ready');
+                return true;
+            };
+        }else if(type == 4){
+            error.classList.remove('inactive')
+            error.textContent = `Select a Pokemon`
             setTimeout(() => {
                 error.classList.add('inactive')
-            }, 1000);
-
-            console.log('not ready');
-            return true;
+            }, 1200);
         }
+
+        
+
+
+        
     }
 
 
@@ -481,7 +525,7 @@ let displayControllerMod = (function(){
             winnerMSG = `${winner} wins the round`;
 
         }else {
-            winnerMSG = 'its a fucken tieeee';
+            winnerMSG = 'its a tie!';
         }
 
         playerTurn = 1;

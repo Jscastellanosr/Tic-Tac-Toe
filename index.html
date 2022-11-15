@@ -17,7 +17,7 @@
 
 
         <div class="score inactive">
-            <div class="boardRounds">Round :0</div>
+            <div class="boardRounds" >Round :0</div>
             <div class="results">
                 <div class="P1Score">
                     p1
@@ -48,7 +48,7 @@
                         <div class="selectionHeader">
                             <h3>P1</h3>
                             <label for="name1">Name:</label>
-                            <input type="text" name="name" id="name1">
+                            <input type="text" name="name" id="name1" maxlength="15">
                         </div>
                         <div class="pkmnTAB">
                             <div class="icon">
@@ -79,7 +79,7 @@
                                 <img src="files/png/player1/weedle.png" alt="weedle">
                             </div>
                         </div>
-                        <button>SELECT</button>
+                        <button>READY</button>
                     </div>
                     <div class="player1s inactive">
                         <h2 class="p1Name"></h2>
@@ -89,14 +89,14 @@
                 </div>
                 <div class="rounds">
                     <label for="rounds">Rounds:</label>
-                    <input type="number" id="rounds">
+                    <input type="number" id="rounds" min="1" max="10" onkeydown="return false">
                 </div>
                 <div class="players">
                     <div class="player2">
                         <div class="selectionHeader">
                             <h3>P2</h3>
                             <label for="name2" class="labelP2">Name:</label>
-                            <input type="text" name="name" id="name2">
+                            <input type="text" name="name" id="name2" maxlength="15">
                             <div class="computerName inactive">
                                 <h3>Computer</h3>
                                 <select name="difficulty" id="difficulty">
@@ -137,7 +137,7 @@
                                 <img src="files/png/player2/zubat.png" alt="zubat">
                             </div>
                         </div>
-                        <button>SELECT</button>
+                        <button>READY</button>
                     </div>
                     <div class="player2s inactive">
                         <h2 class="p2Name"></h2>
