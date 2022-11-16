@@ -327,24 +327,22 @@ let displayControllerMod = (function(){
                 if(playerTurn == 2 && AI == true) {
                     turn = turn+1;
                     
-                
+                    setTimeout(() => {
+                        if(difficulty == 'hard') {
+                            hardAI ();                        
+                        }else if(difficulty == 'medium'){
+                            if (AImedium == 1){
+                                hardAI (); 
+                                AImedium = 2;
+                            }else if(AImedium == 2){
+                                easyAI ();
+                                AImedium = 1;
+                            }             
 
-                    if(difficulty == 'hard') {
-                        hardAI ();                        
-                    }else if(difficulty == 'medium'){
-                        if (AImedium == 1){
-                            hardAI (); 
-                            AImedium = 2;
-                        }else if(AImedium == 2){
+                        }else if(difficulty == 'easy') {
                             easyAI ();
-                            AImedium = 1;
-                        }             
-
-                    }else if(difficulty == 'easy') {
-                        easyAI ();
-                    }
-
-
+                        }
+                    }, 500);
                 }
 
                 function easyAI () {
