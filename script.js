@@ -77,7 +77,6 @@ let boardflow = (function(){
     }); 
 
 
-
     iconsP1.forEach(icon =>{
         icon.dataset.checked = false;
         icon.addEventListener('click', ()=> {
@@ -98,7 +97,6 @@ let boardflow = (function(){
             });
             icon.dataset.checked = true;
             icon.classList.add('selectedP2')
-
         })
     })
 
@@ -108,6 +106,12 @@ let boardflow = (function(){
     })
     P2Name.addEventListener('click', ()=> {
         P2Name.classList.remove('emptyField')
+    })
+
+    difficulty.addEventListener('click', ()=> {
+        if(difficulty.value == 'easy') difficulty.setAttribute('style', 'background: rgb(0, 255, 195)')
+        if(difficulty.value == 'medium') difficulty.setAttribute('style', 'background: rgb(255, 221, 0)')
+        if(difficulty.value == 'hard') difficulty.setAttribute('style', 'background: rgb(255, 17, 0)')
     })
 
     selectP1.addEventListener('click', ()=> {
@@ -167,8 +171,6 @@ let boardflow = (function(){
         }
 
         gameVSAI == false? P2 = createPlayer(P2Name.value, 1, pkmnP2.alt, pkmnP2.src) : P2 = createPlayer('Computer', 1, pkmnP2.alt, pkmnP2.src)
-
-        
 
 
         togglePKMNScreen('.player2', '.player2s', pkmnP2, '.P2Selected')
@@ -249,14 +251,7 @@ let boardflow = (function(){
                 error.classList.add('inactive')
             }, 1200);
         }
-
-        
-
-
-        
     }
-
-
 
     const togglePKMNScreen = (player, playerS, pkmn, selected) => {
         document.querySelector(`${player}`).classList.toggle('inactive')
@@ -265,11 +260,6 @@ let boardflow = (function(){
         if(pkmn) document.querySelector(`${selected}`).src = `files/png/pixel/${pkmn.alt}.png`;
         
     };
-
-    const getP1 = () => {return P1;}
-    const getP2 = () => {return P2;}
-
-    return{getP1, getP2}
 
 
 })()
@@ -472,23 +462,52 @@ let displayControllerMod = (function(){
 
         
         for (j=0;j<=8;j++){
-            if (board[j] != null && 
-                ((board[j] == board[j+3] && board[j]== board[j+6])||
-                ((j == 0 || j == 3 || j == 6) && board[j] == board[j+1] && board[j]== board[j+2]))){
-                playerTurn == 1? roundwinner = playersOBJ[0].getPName(): roundwinner = playersOBJ[1].getPName()
-                if(test == undefined)roundOver(roundwinner, false);
-                return true;
+            if (board[j] != null){
+
+                if ((board[j] == board[j+3] && board[j]== board[j+6])) {
+                    if(!test)colorWinner(j, j+3, j+6)
+                    if (defineWinner(test)) return true;
+                    
+                } else if((j == 0 || j == 3 || j == 6) && board[j] == board[j+1] && board[j]== board[j+2]){
+                    if(!test)colorWinner(j, j+1, j+2)
+                    if (defineWinner(test)) return true;    
+                }   
             }
         }
-        if(((board[0] != null && board[0] == board[4] && board[0] == board[8])||
-            (board[2] != null && board[2] == board[4] && board[2] == board[6]))){
-            playerTurn == 1? roundwinner = playersOBJ[0].getPName(): roundwinner = playersOBJ[1].getPName()
-            if(test == undefined)roundOver(roundwinner, false);
-            return true;
+        if(board[0] != null && board[0] == board[4] && board[0] == board[8]){
+            if(!test)colorWinner(0, 4, 8)
+            if (defineWinner(test)) return true;
+            
+
+        }else if(board[2] != null && board[2] == board[4] && board[2] == board[6]){
+            if(!test)colorWinner(2, 4, 6)
+            if (defineWinner(test)) return true;
+            
         }
+
+    }
+    
+
+    function defineWinner (test) {
+        playerTurn == 1? roundwinner = playersOBJ[0].getPName(): roundwinner = playersOBJ[1].getPName()
+        if(test == undefined)roundOver(roundwinner, false);
+        return true;
     }
 
-    
+    function colorWinner (...indexes) {
+        if(playerTurn == 1){
+            for(index in indexes) {
+                gridBoxes[indexes[index]].classList.add('victory1')
+            };
+        }else if (playerTurn == 2){
+            for(index in indexes) {
+                gridBoxes[indexes[index]].classList.add('victory2')
+            };
+        }
+        
+    };
+
+
     function roundOver (winner, tie) {
 
         let winnerMSG = ""; 
@@ -550,6 +569,8 @@ let displayControllerMod = (function(){
         for(let i=0;i<=8; i++) {
             gridBoxes[i].innerHTML = ""
             gridBoxes[i].dataset.checked = false;
+            gridBoxes[i].classList.remove('victory1') 
+            gridBoxes[i].classList.remove('victory2')              
         }
     }
 
@@ -609,8 +630,6 @@ let createPlayer = function(name, number, pkmn, url) {
 
     return{getPName, getPNumber, getPURL, getpkmn, getPScore, scoreUp}
 }
-
-
 
 
 let playersOBJ = new Array(2)

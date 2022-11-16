@@ -79,9 +79,6 @@ header{
     align-items: center;
 }
 
-.computerName{
-    display: flex;
-}
 
 .pkmnSelection{
     display: flex;
@@ -117,8 +114,35 @@ header{
     border-radius: 20px;
 }
 
+.selectionHeader {
+    width: 100%;
+}
+
 .selectionHeader h3 {
     font-size: 15px;
+}
+
+.computerName{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.computerName select {
+    margin-top: -5px;
+    width: 100px;
+}
+
+.computerName select option[value='easy']{
+    background-color: rgb(0, 255, 195);
+}
+.computerName select option[value='medium']{
+    background-color: rgb(255, 221, 0);
+
+}
+.computerName select option[value='hard']{
+    background-color: rgb(255, 17, 0);
+
 }
 
 
@@ -233,6 +257,14 @@ header{
     justify-content: center;
     align-items: center;
 
+}
+
+.gameBoard div.victory1 {
+    background-color: rgb(22, 247, 25);
+}
+
+.gameBoard div.victory2 {
+    background-color: rgb(255, 118, 39);
 }
 
 .gameBoard div img {
