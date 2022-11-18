@@ -271,15 +271,17 @@ header{
 
 }
 .gameBoard div img{
+    width: 80%;
+    height: 80%;
     animation: appear2 0.3s ease forwards;
 
 }
 
 @keyframes appear2 {
-    0%{ opacity: 0; transform: scale(2);}
-    25%{ opacity: 0.25; transform: scale(1.5);}
-    50%{ opacity: 0.5; transform: scale(0.7);}
-    100%{ opacity: 1; transform: scale(1);}
+    0%{opacity: 0; transform: scale(2);}
+    25%{opacity: 0.25; transform: scale(1.5);}
+    50%{opacity: 0.5; transform: scale(0.7);}
+    100%{opacity: 1; transform: scale(1);}
 }
 
 @keyframes appear {
@@ -299,10 +301,6 @@ header{
     background-color: rgb(255, 118, 39);
 }
 
-.gameBoard div img {
-    width: 80%;
-    height: 80%;
-}
 
 .inactive {
     display: none;

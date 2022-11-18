@@ -286,6 +286,7 @@ let displayControllerMod = (function(){
     let roundwinner;
     let AI = false;
     let AImedium = 2;
+    let animating = false;
     
 
 
@@ -298,6 +299,8 @@ let displayControllerMod = (function(){
         gridIndex++;
         
         node.addEventListener('click', ()=>{
+
+            if (animating == true) return;
 
             let symbol;
             let poke;
@@ -326,7 +329,7 @@ let displayControllerMod = (function(){
 
                 if(playerTurn == 2 && AI == true) {
                     turn = turn+1;
-                    
+                    animating = true;
                     setTimeout(() => {
                         if(difficulty == 'hard') {
                             hardAI ();                        
@@ -342,6 +345,7 @@ let displayControllerMod = (function(){
                         }else if(difficulty == 'easy') {
                             easyAI ();
                         }
+                        animating = false;
                     }, 500);
                 }
 
