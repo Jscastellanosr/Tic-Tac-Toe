@@ -400,16 +400,11 @@ let displayControllerMod = (function(){
                         }
                     }
                     
-                    
-
                     let compMark = document.createElement('img');
                     compMark.src = playersOBJ[1].getPURL();
                     gridBoxes[bestBox].appendChild(compMark);
                     gameModule.modBoard(bestBox, playersOBJ[1].getpkmn());
                     gridBoxes[bestBox].dataset.checked = true;
-
-                    
-
                 }
 
 
@@ -454,9 +449,9 @@ let displayControllerMod = (function(){
                             }
                         }
                         return bestScore;
-                    }
-                }
-            }
+                    };
+                };
+            };
         });       
     });
     
